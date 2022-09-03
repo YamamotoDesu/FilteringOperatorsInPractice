@@ -108,5 +108,8 @@ extension PHPhotoLibrary {
   
 <img width="516" src="https://user-images.githubusercontent.com/47273077/188253936-9e204ec1-2f10-4b94-bd64-047e989e24b3.gif">
 
+## Display an error message if the user does't grant access
+<img width="516" src="https://user-images.githubusercontent.com/47273077/188254019-31ef8362-6d5d-424d-92c4-f3949d0cc04c.gif">
+
 
   
