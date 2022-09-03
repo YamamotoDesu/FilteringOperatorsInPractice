@@ -50,8 +50,7 @@
 ```
   
 ## Keep taking elements while a condition is met
-     
-![2022-09-03 11 41 01](https://user-images.githubusercontent.com/47273077/188252826-b35f383d-7a83-47ae-b1c2-f21b2f7b1e60.gif)
+<img width="516" src="https://user-images.githubusercontent.com/47273077/188252826-b35f383d-7a83-47ae-b1c2-f21b2f7b1e60.gif">
 
 ```swift
    newPhotos
