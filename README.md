@@ -108,5 +108,47 @@ extension PHPhotoLibrary {
   
 <img width="516" src="https://user-images.githubusercontent.com/47273077/188253936-9e204ec1-2f10-4b94-bd64-047e989e24b3.gif">
 
+## Display an error message if the user does't grant access
+<img width="516" src="https://user-images.githubusercontent.com/47273077/188254019-31ef8362-6d5d-424d-92c4-f3949d0cc04c.gif">
 
-  
+```swift
+    autholized
+//      .skip(1) // you can always skip the first element from the sequence, since it is the never the final one. ↓
+      .distinctUntilChanged()
+      .takeLast(1)
+      .filter { !$0 }
+      .subscribe(onNext: { [weak self] _ in
+        guard let errorMessage = self?.errorMessage else { return }
+        DispatchQueue.main.async(execute: errorMessage)
+      })
+      .disposed(by: bag)
+ 
+   private func errorMessage() {
+    alert(title: "No Access to the Camera Roll", text: "You can grant acess to Combinestagram from the Setting app")
+      .subscribe(onCompleted: { [weak self] in
+        self?.dismiss(animated: true, completion: nil)
+        self?.navigationController?.popViewController(animated: true)
+      })
+      .disposed(by: bag)
+  }
+ ```
+   
+   
+ ```swift
+ extension UIViewController {
+  func alert(title: String, text: String?) -> Completable {
+    return Completable.create { [weak self] completable in
+      let alertVC = UIAlertController(title: title, message: text, preferredStyle: .alert)
+      alertVC.addAction(UIAlertAction(title: "Close", style: .default, handler: {_ in
+        completable(.completed)
+      }))
+      self?.present(alertVC, animated: true, completion: nil)
+      return Disposables.create {
+        self?.dismiss(animated: true, completion: nil)
+      }
+    }
+  }
+}
+```
+<img width="516" src="https://user-images.githubusercontent.com/47273077/188254831-5ea3ba72-504e-42bf-963c-fea5e1163a40.gif">
+
