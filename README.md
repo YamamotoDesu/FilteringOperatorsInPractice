@@ -59,3 +59,7 @@
       return count < 3
     }
 ```
+
+## PHPhotoLibarary authorization obervable
+### Issue
+<img width="516" src="https://user-images.githubusercontent.com/47273077/188253035-6d9dc3d5-cdcc-40b9-afe8-7ca14bda1814.gif">
