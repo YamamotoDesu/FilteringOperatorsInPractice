@@ -65,6 +65,18 @@ class PhotosViewController: UICollectionViewController {
     super.viewDidLoad()
     
     let autholized = PHPhotoLibrary.authorized.share()
+    
+    autholized
+//      .skip(1) // you can always skip the first element from the sequence, since it is the never the final one. ↓
+      .distinctUntilChanged()
+      .takeLast(1)
+      .filter { !$0 }
+      .subscribe(onNext: { [weak self] _ in
+        guard let errorMessage = self?.errorMessage else { return }
+        DispatchQueue.main.async(execute: errorMessage)
+      })
+      .disposed(by: bag)
+    
     autholized
       .skipWhile { !$0 }
       .take(1)
@@ -77,6 +89,16 @@ class PhotosViewController: UICollectionViewController {
       .disposed(by: bag)
 
   }
+  
+  private func errorMessage() {
+    alert(title: "No Access to the Camera Roll", text: "You can grant acess to Combinestagram from the Setting app")
+      .subscribe(onCompleted: { [weak self] in
+        self?.dismiss(animated: true, completion: nil)
+        self?.navigationController?.popViewController(animated: true)
+      })
+      .disposed(by: bag)
+  }
+  
 
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
