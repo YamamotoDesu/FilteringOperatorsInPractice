@@ -152,3 +152,33 @@ extension PHPhotoLibrary {
 ```
 <img width="516" src="https://user-images.githubusercontent.com/47273077/188254831-5ea3ba72-504e-42bf-963c-fea5e1163a40.gif">
 
+
+## Completeting a subscription after given time interval
+
+<img width="516" src="https://user-images.githubusercontent.com/47273077/188255254-5e4d2280-817a-4b50-83e5-6c590ee6d98c.gif">
+
+### Before
+```swift
+  private func errorMessage() {
+    alert(title: "No Access to the Camera Roll", text: "You can grant acess to Combinestagram from the Setting app")
+      .subscribe(onCompleted: { [weak self] in
+        self?.dismiss(animated: true, completion: nil)
+        self?.navigationController?.popViewController(animated: true)
+      })
+      .disposed(by: bag)
+  }
+```
+
+### After 
+```swift
+  private func errorMessage() {
+    alert(title: "No Access to the Camera Roll", text: "You can grant acess to Combinestagram from the Setting app")
+      .asObservable()
+      .take(.seconds(5), scheduler: MainScheduler.instance)
+      .subscribe(onCompleted: { [weak self] in
+        self?.dismiss(animated: true, completion: nil)
+        self?.navigationController?.popViewController(animated: true)
+      })
+      .disposed(by: bag)
+  }
+```
