@@ -63,3 +63,50 @@
 ## PHPhotoLibarary authorization obervable
 ### Issue
 <img width="516" src="https://user-images.githubusercontent.com/47273077/188253035-6d9dc3d5-cdcc-40b9-afe8-7ca14bda1814.gif">
+
+```swift
+extension PHPhotoLibrary {
+  static var authorized: Observable<Bool> {
+    return Observable.create { observer in
+      DispatchQueue.main.async {
+        if authorizationStatus() == .authorized {
+          observer.onNext(true)
+          observer.onCompleted()
+        } else {
+          observer.onNext(false)
+          requestAuthorization { newStatus in
+            observer.onNext(newStatus == .authorized)
+            observer.onCompleted()
+          }
+        }
+      }
+      return Disposables.create()
+    }
+  }
+}
+```
+
+```swift
+  // MARK: View Controller
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    let autholized = PHPhotoLibrary.authorized.share()
+    autholized
+      .skipWhile { !$0 }
+      .take(1)
+      .subscribe(onNext: { [weak self] _ in
+        self?.photos = PhotosViewController.loadPhotos()
+        DispatchQueue.main.async {
+          self?.collectionView?.reloadData()
+        }
+      })
+      .disposed(by: bag)
+
+  }
+```
+  
+<img width="516" src="https://user-images.githubusercontent.com/47273077/188253936-9e204ec1-2f10-4b94-bd64-047e989e24b3.gif">
+
+
+  
